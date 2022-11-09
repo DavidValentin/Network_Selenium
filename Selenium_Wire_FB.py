@@ -1,6 +1,4 @@
 from seleniumwire import webdriver
-# from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
@@ -28,11 +26,13 @@ login_button.click()
 time.sleep(5)
 
 # Link de la categoria
+# TODO Mapear todas las URLs [arreglo con todas las URL a scrapear]
 yoururl = "https://www.facebook.com/marketplace/category/exercise-fitness"
 driver.execute_script("window.open('');")
 driver.switch_to.window(driver.window_handles[1])
 driver.get(yoururl)
 
+# TODO Scroll Infinito
 # Scrolling
 time.sleep(5)
 html = driver.find_element(By.TAG_NAME, 'html')
@@ -44,6 +44,7 @@ html = driver.find_element(By.TAG_NAME, 'html')
 html.send_keys(Keys.END)
 time.sleep(5)
 
+# TODO Persistir esta data dividirlo por request (body, x-fb-lsd, referer, cookie)
 for request in driver.requests:
     if 'graphql/' in request.url and len(request.body) > 6000:
         print(
