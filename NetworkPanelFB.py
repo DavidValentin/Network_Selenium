@@ -7,15 +7,13 @@ import time
 import json
 
 caps = DesiredCapabilities.CHROME
-caps['goog:loggingPrefs'] = {'client': 'ALL'}
+caps['goog:loggingPrefs'] = {'performance': 'ALL'}
 
 # Login
 web = 'https://es-la.facebook.com/login/?next=%2Fmarketplace%2F'
-path = "/Users/dfval/Downloads/Driver/chromedriver_108.0.5359.22"
+path = "/Users/dfval/Downloads/Drivers/chromedriver_107.0.5304.18"
 
-chrome_options = Options()
-chrome_options.add_experimental_option('w3c', False)
-driver = webdriver.Chrome(path, desired_capabilities=caps, options=chrome_options)
+driver = webdriver.Chrome(path, desired_capabilities=caps)
 driver.get(web)
 driver.maximize_window()
 
@@ -53,14 +51,15 @@ html.send_keys(Keys.END)
 # html.send_keys(Keys.END)
 # time.sleep(5)
 
-f = open('client.txt', 'w')
+f = open('performance_if.txt', 'w')
 
-for entry in driver.get_log('client'):
+for entry in driver.get_log('performance'):
     # s = entry['message']
     # json_acceptable_string = s.replace("'", "\"")
     # d = json.loads(json_acceptable_string)
     # print(d)
-    f.write(str(entry))
+    if 'postData' in entry:
+        f.write(str(entry))
     # print(entry)
 
 f.close()
