@@ -26,14 +26,16 @@ login_button.click()
 time.sleep(5)
 
 # Link de la categoria
-# TODO Mapear todas las URLs [arreglo con todas las URL a scrapear]
+# TODO 1 Keyla Mapear todas las URLs [arreglo con todas las URL a scrapear]
+# TODO 1 Probar con API FETCH en Python
 yoururl = "https://www.facebook.com/marketplace/category/exercise-fitness"
 driver.execute_script("window.open('');")
 driver.switch_to.window(driver.window_handles[1])
 driver.get(yoururl)
 
-# TODO Scroll Infinito
+# TODO 2 Scroll Infinito
 # Scrolling
+driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
 time.sleep(5)
 html = driver.find_element(By.TAG_NAME, 'html')
 html.send_keys(Keys.END)
@@ -44,7 +46,7 @@ html = driver.find_element(By.TAG_NAME, 'html')
 html.send_keys(Keys.END)
 time.sleep(5)
 
-# TODO Persistir esta data dividirlo por request (body, x-fb-lsd, referer, cookie)
+# TODO 3 Persistir esta data dividirlo por request (body, x-fb-lsd, referer, cookie)
 for request in driver.requests:
     if 'graphql/' in request.url and len(request.body) > 6000:
         print(
