@@ -2,6 +2,8 @@ from seleniumwire import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
+import re
+import json
 
 web = 'https://es-la.facebook.com/login/?next=%2Fmarketplace%2F'
 path = "/Users/dfval/Downloads/chromedriver"
@@ -23,7 +25,7 @@ password.send_keys("s8RDVuBjHjWpRUr")
 # Login Click Button
 login_button = driver.find_element(By.XPATH, "//button[@id='loginbutton']")
 login_button.click()
-time.sleep(5)
+time.sleep(10)
 
 # Link de la categoria
 # TODO 1 Keyla Mapear todas las URLs [arreglo con todas las URL a scrapear]
@@ -35,7 +37,6 @@ driver.get(yoururl)
 
 # TODO 2 Scroll Infinito
 # Scrolling
-driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
 time.sleep(5)
 html = driver.find_element(By.TAG_NAME, 'html')
 html.send_keys(Keys.END)
@@ -46,11 +47,22 @@ html = driver.find_element(By.TAG_NAME, 'html')
 html.send_keys(Keys.END)
 time.sleep(5)
 
+data_list = []
 # TODO 3 Persistir esta data dividirlo por request (body, x-fb-lsd, referer, cookie)
 for request in driver.requests:
-    if 'graphql/' in request.url and len(request.body) > 6000:
-        print(
-            # request.url,
-            request.body,
-            request.headers
-        )
+    if 'graphql/' in request.url and len(request.body) > 3000:
+        body = re.findall("b'([^']*)'", str(request.body))
+        cookie = re.findall('cookie: ([^\n]*)', str(request.headers))
+        xfblsd = re.findall('x-fb-lsd: ([^\n]*)', str(request.headers))
+        referer = re.findall('referer: ([^\n]*)', str(request.headers))
+
+        data = {'body': body, 'cookie': cookie, 'xfblsd': xfblsd, 'referer': referer}
+        data_list.append(data)
+
+print(data_list)
+
+with open('data.json', 'w') as fp:
+    json.dump(data_list, fp)
+
+with open('data.json', 'r') as fp:
+    data_list = json.load(fp)
