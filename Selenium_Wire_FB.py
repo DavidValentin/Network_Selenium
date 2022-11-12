@@ -36,7 +36,7 @@ driver.switch_to.window(driver.window_handles[1])
 driver.get(yoururl)
 
 # TODO 2 Scroll Infinito
-# Scrolling
+# Scrolling 1
 time.sleep(5)
 html = driver.find_element(By.TAG_NAME, 'html')
 html.send_keys(Keys.END)
@@ -46,6 +46,23 @@ html.send_keys(Keys.END)
 html = driver.find_element(By.TAG_NAME, 'html')
 html.send_keys(Keys.END)
 time.sleep(5)
+
+# Scrolling Infinito
+last_height = driver.execute_script("return document.body.scrollHeight")
+j = 1
+while True:
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(5)
+    new_height = driver.execute_script("return document.body.scrollHeight")
+    if new_height == last_height:
+        break
+    else:
+        last_height = new_height
+        j = j + 1
+
+    if j > 50:
+        break
+
 
 data_list = []
 # TODO 3 Persistir esta data dividirlo por request (body, x-fb-lsd, referer, cookie)
@@ -66,3 +83,4 @@ with open('data.json', 'w') as fp:
 
 with open('data.json', 'r') as fp:
     data_list = json.load(fp)
+
